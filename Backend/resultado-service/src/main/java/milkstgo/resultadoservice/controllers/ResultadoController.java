@@ -1,0 +1,34 @@
+package milkstgo.resultadoservice.controllers;
+
+import milkstgo.resultadoservice.entities.ResultadoEntity;
+import milkstgo.resultadoservice.services.ResultadoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+
+@RestController
+@RequestMapping("/resultados")
+public class ResultadoController {
+    @Autowired
+    private ResultadoService resultadoService;
+
+    //@GetMapping("/subirArchivo") -> esta en Llegada
+
+    @PostMapping("/File")
+    public String upload(@RequestParam("file") MultipartFile archivo, RedirectAttributes redirectAttributes){
+        resultadoService.guardarResultado(archivo);
+        redirectAttributes.addFlashAttribute("mensajeResultado", resultadoService.leerCsv("Resultados.csv"));
+        return "redirect:/subirArchivo";
+    }
+
+    @GetMapping("/Info")
+    public String listar(Model model){
+        ArrayList<ResultadoEntity> datos = resultadoService.obtenerDatosResultado();
+        model.addAttribute("datos", datos);
+        return "informacionArchivoResultado";
+    }
+}
