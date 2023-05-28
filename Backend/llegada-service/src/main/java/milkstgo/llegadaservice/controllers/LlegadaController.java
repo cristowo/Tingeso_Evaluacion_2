@@ -3,6 +3,7 @@ package milkstgo.llegadaservice.controllers;
 import milkstgo.llegadaservice.entities.LlegadaEntity;
 import milkstgo.llegadaservice.services.LlegadaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,20 @@ public class LlegadaController {
     @Autowired
     private LlegadaService llegadaService;
 
+    @GetMapping("/{codigo}")
+    public ResponseEntity<ArrayList<LlegadaEntity>> getLlegdasByCodigo(@PathVariable("codigo") String codigo) {
+        return ResponseEntity.ok(llegadaService.getLlegadasByCodigo(codigo));
+    }
+    @GetMapping("/totalDays/{codigo}")
+    public ResponseEntity<Integer> getTotalDays(@PathVariable("codigo") String codigo) {
+        return ResponseEntity.ok(llegadaService.getTotalDays(codigo));
+    }
+    @GetMapping("/totalTurnos/{codigo}/{turnos}")
+    public ResponseEntity<Integer> getTotalTurnos(@PathVariable("codigo") String codigo, @PathVariable("turno") String turno) {
+        return ResponseEntity.ok(llegadaService.countTurnosById(codigo, turno));
+    }
+
+
     @PostMapping("/File")
     public void upload(@RequestParam("file") MultipartFile archivo, RedirectAttributes redirectAttributes){
         llegadaService.guardar(archivo);
@@ -28,4 +43,5 @@ public class LlegadaController {
         model.addAttribute("datos", datos);
         return "informacionArchivo";
     }
+
 }

@@ -25,6 +25,20 @@ public class LlegadaService {
     @Autowired
     LlegadaRepository llegadaRepository;
     private final Logger logger = LoggerFactory.getLogger(LlegadaService.class);
+
+    public ArrayList<LlegadaEntity> getLlegadasByCodigo(String codigo){
+        return llegadaRepository.findAllLlegadasByCodigoProveedor(codigo);
+    }
+    public Integer getTotalDays(String codigo){
+        return llegadaRepository.countByProveedor(codigo);
+    }
+
+    public Integer countTurnosById(String codigo, String turno){
+        return llegadaRepository.countTurnosById(codigo, turno);
+    }
+
+
+
     public ArrayList<LlegadaEntity> obtenerDatos(){
         return (ArrayList<LlegadaEntity>) llegadaRepository.findAll();
     }

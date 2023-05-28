@@ -3,6 +3,7 @@ package milkstgo.proveedorservice.controllers;
 import milkstgo.proveedorservice.entities.ProveedorEntity;
 import milkstgo.proveedorservice.services.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +34,8 @@ public class ProveedorController {
     }
 
     @GetMapping("/{codigo}")
-    public String getProveedor(@PathVariable("codigo") String codigo,  Model model){
-        ProveedorEntity proveedor = proveedorService.getProveedor(codigo);
-        model.addAttribute("proveedor", proveedor);
-        return "listaProveedores";
+    public ResponseEntity<ProveedorEntity> getProveedorByCodigo(@PathVariable("codigo") String codigo) {
+        return ResponseEntity.ok(proveedorService.getProveedor(codigo));
     }
 
     @DeleteMapping("/{codigo}")

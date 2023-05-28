@@ -3,6 +3,7 @@ package milkstgo.resultadoservice.controllers;
 import milkstgo.resultadoservice.entities.ResultadoEntity;
 import milkstgo.resultadoservice.services.ResultadoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +17,10 @@ public class ResultadoController {
     @Autowired
     private ResultadoService resultadoService;
 
-    //@GetMapping("/subirArchivo") -> esta en Llegada
+    @GetMapping("/{codigo}")
+    public ResponseEntity<ResultadoEntity> getResultadoByCodigo(@PathVariable("codigo") String codigo) {
+        return ResponseEntity.ok(resultadoService.obtenerResultadosByCodigo(codigo));
+    }
 
     @PostMapping("/File")
     public String upload(@RequestParam("file") MultipartFile archivo, RedirectAttributes redirectAttributes){

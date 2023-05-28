@@ -24,6 +24,9 @@ public class ResultadoService {
 
     private final Logger logger = LoggerFactory.getLogger(ResultadoService.class);
 
+    public  ResultadoEntity obtenerResultadosByCodigo(String codigo){
+        return resultadoRepository.findResultadosByCodigoProveedor(codigo);
+    }
     public ArrayList<ResultadoEntity> obtenerDatosResultado(){
         return (ArrayList<ResultadoEntity>) resultadoRepository.findAll();
     }
