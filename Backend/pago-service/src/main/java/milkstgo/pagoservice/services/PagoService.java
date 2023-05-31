@@ -12,10 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PagoService {
@@ -28,15 +25,19 @@ public class PagoService {
         return pagoRepository.findPagoByCodigo(codigo);
     }
 
-    public List<ProveedorModel> findAllProveedores(){
-        return restTemplate.getForObject("http://localhost:8093/proveedores", List.class);
+    public List<ProveedorModel> findAllProveedores() {
+        ProveedorModel[] proveedores = restTemplate.getForObject("http://localhost:8093/proveedores", ProveedorModel[].class);
+        List<ProveedorModel> proveedoresList = Arrays.asList(proveedores);
+        return proveedoresList;
     }
     public ProveedorModel findProveedorByCodigoProveedor(String codigo){
         return restTemplate.getForObject("http://localhost:8093/proveedores/"+ codigo, ProveedorModel.class);
     }
 
     public ArrayList<LlegadaModel> findAllLlegadasByCodigoProveedor(String codigo){
-        return restTemplate.getForObject("http://localhost:8091/llegadas/"+ codigo, ArrayList.class);
+        LlegadaModel[] llegadas = restTemplate.getForObject("http://localhost:8091/llegadas/"+ codigo, LlegadaModel[].class);
+        return new ArrayList<>(Arrays.asList(llegadas));
+
     }
 
     public Integer getTotalDays(String codigo){
@@ -51,16 +52,26 @@ public class PagoService {
         return restTemplate.getForObject("http://localhost:8091/llegadas/totalTurnos/"+ codigo + "/" + turnos, Integer.class);
     }
 
-    public void imprimirCodigoProveedores(){
+    public List<PagoEntity> getAll(){
+        return pagoRepository.getAll();
+    }
+
+    public void iniciar(){
         List<ProveedorModel> proveedores = findAllProveedores();
         for (ProveedorModel proveedor: proveedores) {
-            System.out.println(proveedor.getCodigo());
+            try {
+                if(findProveedorByCodigoProveedor(proveedor.getCodigo()) != null) {
+                    setPago(proveedor);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Generated
-    public void setPago(String codigo) throws ParseException {
-        ProveedorModel proveedor = findProveedorByCodigoProveedor(codigo);
+    public void setPago(ProveedorModel proveedor) throws ParseException {
+        String codigo = proveedor.getCodigo();
         PagoEntity pago = new PagoEntity();
         //----------- Atributos Basicos-----------------
         //codigo proveedor

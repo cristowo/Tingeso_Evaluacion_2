@@ -25,7 +25,7 @@ public class LlegadaController {
     public ResponseEntity<Integer> getTotalDays(@PathVariable("codigo") String codigo) {
         return ResponseEntity.ok(llegadaService.getTotalDays(codigo));
     }
-    @GetMapping("/totalTurnos/{codigo}/{turnos}")
+    @GetMapping("/totalTurnos/{codigo}/{turno}")
     public ResponseEntity<Integer> getTotalTurnos(@PathVariable("codigo") String codigo, @PathVariable("turno") String turno) {
         return ResponseEntity.ok(llegadaService.countTurnosById(codigo, turno));
     }

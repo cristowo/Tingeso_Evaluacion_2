@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class ProveedorEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String codigo;
     private String nombre;

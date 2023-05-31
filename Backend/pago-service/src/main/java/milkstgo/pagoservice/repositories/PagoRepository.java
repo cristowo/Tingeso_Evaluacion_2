@@ -15,4 +15,8 @@ public interface PagoRepository extends JpaRepository<PagoEntity, Integer> {
 
     @Query("select p from PagoEntity p where p.codigoProveedor = :codigo")
     List<PagoEntity> findPagoByCodigo(@Param("codigo") String codigo);
+
+    @Query("select p from PagoEntity p")
+    List<PagoEntity> getAll();
+
 }
