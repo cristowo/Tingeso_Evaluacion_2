@@ -1,8 +1,6 @@
 package milkstgo.proveedorservice.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class ProveedorEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
     private String codigo;
     private String nombre;
     private String categoria;

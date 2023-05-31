@@ -31,17 +31,18 @@ public class LlegadaController {
     }
 
 
-    @PostMapping("/File")
+    @PostMapping("/file")
     public void upload(@RequestParam("file") MultipartFile archivo, RedirectAttributes redirectAttributes){
         llegadaService.guardar(archivo);
         redirectAttributes.addFlashAttribute("mensaje", llegadaService.leerCsv("Acopio.csv"));
     }
 
-    @GetMapping("/informacionArchivo")
-    public String listar(Model model){
+    @GetMapping("/info")
+    public ArrayList<LlegadaEntity> listar(Model model){
         ArrayList<LlegadaEntity> datos = llegadaService.obtenerDatos();
-        model.addAttribute("datos", datos);
-        return "informacionArchivo";
+        //model.addAttribute("datos", datos);
+        //return "informacionArchivo";
+        return datos;
     }
 
 }

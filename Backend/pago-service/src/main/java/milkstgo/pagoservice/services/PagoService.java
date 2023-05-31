@@ -21,30 +21,41 @@ import java.util.List;
 public class PagoService {
     @Autowired
     PagoRepository pagoRepository;
+    @Autowired
     RestTemplate restTemplate;
 
     public List<PagoEntity> buscarPagos(String codigo){
         return pagoRepository.findPagoByCodigo(codigo);
     }
 
+    public List<ProveedorModel> findAllProveedores(){
+        return restTemplate.getForObject("http://localhost:8093/proveedores", List.class);
+    }
     public ProveedorModel findProveedorByCodigoProveedor(String codigo){
-        return restTemplate.getForObject("http://proveedores/"+ codigo, ProveedorModel.class);
+        return restTemplate.getForObject("http://localhost:8093/proveedores/"+ codigo, ProveedorModel.class);
     }
 
     public ArrayList<LlegadaModel> findAllLlegadasByCodigoProveedor(String codigo){
-        return restTemplate.getForObject("http://llegadas/"+ codigo, ArrayList.class);
+        return restTemplate.getForObject("http://localhost:8091/llegadas/"+ codigo, ArrayList.class);
     }
 
     public Integer getTotalDays(String codigo){
-        return restTemplate.getForObject("http://llegadas/totalDays/"+ codigo, Integer.class);
+        return restTemplate.getForObject("http://localhost:8091/llegadas/totalDays/"+ codigo, Integer.class);
     }
 
     public ResultadoModel getResultadoByCodigo(String codigo){
-        return restTemplate.getForObject("http://resultados/"+ codigo, ResultadoModel.class);
+        return restTemplate.getForObject("http://localhost:8092/resultados/"+ codigo, ResultadoModel.class);
     }
 
     public Integer getTotalTurnos(String codigo, String turnos){
-        return restTemplate.getForObject("http://llegadas/totalTurnos/"+ codigo + "/" + turnos, Integer.class);
+        return restTemplate.getForObject("http://localhost:8091/llegadas/totalTurnos/"+ codigo + "/" + turnos, Integer.class);
+    }
+
+    public void imprimirCodigoProveedores(){
+        List<ProveedorModel> proveedores = findAllProveedores();
+        for (ProveedorModel proveedor: proveedores) {
+            System.out.println(proveedor.getCodigo());
+        }
     }
 
     @Generated
