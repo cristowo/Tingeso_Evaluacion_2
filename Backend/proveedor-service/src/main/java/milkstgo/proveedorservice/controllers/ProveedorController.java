@@ -29,10 +29,6 @@ public class ProveedorController {
     @GetMapping()
     public ResponseEntity<List<ProveedorEntity>> getProveedores(){
         List<ProveedorEntity> proveedores = proveedorService.getAllProveedor();
-        //model.addAttribute("proveedores", proveedores);
-        //return "listaProveedores";
-
-        //return proveedores;
         return  ResponseEntity.ok(proveedores);
     }
 
