@@ -1,10 +1,16 @@
-spring.application.name=tingeso2llegada
-spring.datasource.url=jdbc:postgresql://localhost:5432/tingeso2llegada
-spring.datasource.username=postgres
-spring.datasource.password=1234
-server.port=8091
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-
-spring.cloud.config.enabled=true
-spring.cloud.config.uri=http://localhost:8081
+spring:
+  config:
+    import: optional:configserver:http://localhost:8081
+  application:
+    name: llegada-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tingeso2llegada
+    username: postgres
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update

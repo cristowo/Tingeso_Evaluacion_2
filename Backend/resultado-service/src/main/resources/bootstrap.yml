@@ -1,9 +1,16 @@
-spring.application.name=tingeso2resultado
-spring.datasource.url=jdbc:postgresql://localhost:5432/tingeso2resultado
-spring.datasource.username=postgres
-spring.datasource.password=1234
-server.port=8092
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.cloud.config.enabled=true
-spring.cloud.config.uri=http://localhost:8081
+spring:
+  config:
+    import: optional:configserver:http://localhost:8081
+  application:
+    name: resultado-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tingeso2resultado
+    username: postgres
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update

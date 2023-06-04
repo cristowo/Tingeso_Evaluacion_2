@@ -2,13 +2,13 @@ spring:
   config:
     import: optional:configserver:http://localhost:8081
   application:
-    name: pago-service
+    name: proveedor-service
   cloud:
     config:
       enabled: true
       uri: http://localhost:8081
   datasource:
-    url: jdbc:postgresql://localhost:5432/tingeso2pago
+    url: jdbc:postgresql://localhost:5432/tingeso2proveedor
     username: postgres
     password: 1234
   jpa:

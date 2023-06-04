@@ -7,6 +7,6 @@ spring:
         git:
           default-label: master
           uri: https://github.com/cristowo/Tingeso_Evaluacion_2
-          search-paths: config-data
+          search-paths: Backend/config-data
   application:
     name: config-service
