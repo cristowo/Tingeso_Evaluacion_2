@@ -24,34 +24,26 @@ public class PagoService {
     public List<PagoEntity> buscarPagos(String codigo){
         return pagoRepository.findPagoByCodigo(codigo);
     }
-
     public List<ProveedorModel> findAllProveedores() {
-        ProveedorModel[] proveedores = restTemplate.getForObject("http://localhost:8093/proveedores", ProveedorModel[].class);
-        List<ProveedorModel> proveedoresList = Arrays.asList(proveedores);
-        return proveedoresList;
+        ProveedorModel[] proveedores = restTemplate.getForObject("http://proveedor-service/proveedores", ProveedorModel[].class);
+        return Arrays.asList(proveedores);
     }
     public ProveedorModel findProveedorByCodigoProveedor(String codigo){
-        return restTemplate.getForObject("http://localhost:8093/proveedores/"+ codigo, ProveedorModel.class);
+        return restTemplate.getForObject("http://proveedor-service/proveedores/"+ codigo, ProveedorModel.class);
     }
-
     public ArrayList<LlegadaModel> findAllLlegadasByCodigoProveedor(String codigo){
-        LlegadaModel[] llegadas = restTemplate.getForObject("http://localhost:8091/llegadas/"+ codigo, LlegadaModel[].class);
+        LlegadaModel[] llegadas = restTemplate.getForObject("http://llegada-service/llegadas/"+ codigo, LlegadaModel[].class);
         return new ArrayList<>(Arrays.asList(llegadas));
-
     }
-
     public Integer getTotalDays(String codigo){
-        return restTemplate.getForObject("http://localhost:8091/llegadas/totalDays/"+ codigo, Integer.class);
+        return restTemplate.getForObject("http://llegada-service/llegadas/totalDays/"+ codigo, Integer.class);
     }
-
     public ResultadoModel getResultadoByCodigo(String codigo){
-        return restTemplate.getForObject("http://localhost:8092/resultados/"+ codigo, ResultadoModel.class);
+        return restTemplate.getForObject("http://resultado-service/resultados/"+ codigo, ResultadoModel.class);
     }
-
     public Integer getTotalTurnos(String codigo, String turnos){
-        return restTemplate.getForObject("http://localhost:8091/llegadas/totalTurnos/"+ codigo + "/" + turnos, Integer.class);
+        return restTemplate.getForObject("http://llegada-service/llegadas/totalTurnos/"+ codigo + "/" + turnos, Integer.class);
     }
-
     public List<PagoEntity> getAll(){
         return pagoRepository.getAll();
     }
@@ -64,7 +56,7 @@ public class PagoService {
                     setPago(proveedor);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.out.println("Proveedor no registrado " + proveedor.getCodigo());
             }
         }
     }
@@ -90,7 +82,7 @@ public class PagoService {
         int numeroDiasEnvio = getTotalDays(codigo);
         pago.setNumDiasEnvioLeche(numeroDiasEnvio);
         //------- Promedio Diario de Kg Leche  -------------
-        double promedioDiarioKlsLeche = totalKgLeche/numeroDiasEnvio;
+        double promedioDiarioKlsLeche = (double)totalKgLeche/(double)numeroDiasEnvio;
         pago.setPromedioDiarioKlsLeche(promedioDiarioKlsLeche);
         //------------ Porcentaje Grasa --------------------
         ResultadoModel resultado = getResultadoByCodigo(codigo);
@@ -175,28 +167,24 @@ public class PagoService {
 
     public Integer totalKgLeche(ArrayList<LlegadaModel> llegadas){
         int total =0;
-        for(int i = 0; i < llegadas.size(); i++){
-            total = total + (llegadas.get(i).getKg_leche());
+        for (LlegadaModel llegada : llegadas) {
+            total = total + (llegada.getKg_leche());
         }
         return total;
     }
 
     public Integer pagoPorCategoria(ArrayList<LlegadaModel> llegadas, String categoriaLetra){
         // Pago por kilo de leche según categoría
-        int categoria;
-        if(categoriaLetra.equals("A")){
-            categoria = 700;
-        }else if(categoriaLetra.equals("B")){
-            categoria = 550;
-        }else if(categoriaLetra.equals("C")){
-            categoria = 400;
-        }else{
-            categoria = 250;
-        }
+        int categoria = switch (categoriaLetra) {
+            case "A" -> 700;
+            case "B" -> 550;
+            case "C" -> 400;
+            default -> 250;
+        };
         // Acumulador de pago en categoría
         int pagoCategoria =0;
-        for(int i = 0; i < llegadas.size(); i++){
-            pagoCategoria = pagoCategoria + (categoria * llegadas.get(i).getKg_leche());
+        for (LlegadaModel llegada : llegadas) {
+            pagoCategoria = pagoCategoria + (categoria * llegada.getKg_leche());
         }
         return pagoCategoria;
     }
@@ -212,8 +200,8 @@ public class PagoService {
             grasa = 120;
         }
         int pagoGrasa = 0;
-        for(int i = 0; i < llegadas.size(); i++){
-            pagoGrasa = pagoGrasa + (grasa * llegadas.get(i).getKg_leche());
+        for (LlegadaModel llegada : llegadas) {
+            pagoGrasa = pagoGrasa + (grasa * llegada.getKg_leche());
         }
         return pagoGrasa;
     }
@@ -231,16 +219,16 @@ public class PagoService {
             solidos = 150;
         }
         int pagoSolidos = 0;
-        for(int i = 0; i < llegadas.size(); i++){
-            pagoSolidos = pagoSolidos + (solidos * llegadas.get(i).getKg_leche());
+        for (LlegadaModel llegada : llegadas) {
+            pagoSolidos = pagoSolidos + (solidos * llegada.getKg_leche());
         }
         return pagoSolidos;
     }
 
-    public Double bonificacionFecuencia(String codigo, Integer pagoCategoria){
+    public double bonificacionFecuencia(String codigo, Integer pagoCategoria){
         int mSum = getTotalTurnos(codigo, "M");
         int tSum = getTotalTurnos(codigo, "T");
-        Double bonificacionFrecuencia = 0.0;
+        double bonificacionFrecuencia = 0.0;
         if(mSum >= 10 && tSum >= 10){
             bonificacionFrecuencia = pagoCategoria * 0.2;
         }else if(mSum >= 10){
@@ -282,39 +270,39 @@ public class PagoService {
         }
     }
 
-    public Double porcentajeVariacionLeche(PagoEntity pagoAnterior, Integer totalKgLeche){
-        Double porcentajeVariacionLeche = 0.0;
+    public double porcentajeVariacionLeche(PagoEntity pagoAnterior, Integer totalKgLeche){
+        double porcentajeVariacionLeche = 0.0;
         if(pagoAnterior.getId_pago() != 0){
-            Double kgLecheAnterior = pagoAnterior.getTotalKlsLeche();
+            double kgLecheAnterior = pagoAnterior.getTotalKlsLeche();
             porcentajeVariacionLeche = (((kgLecheAnterior-totalKgLeche)/totalKgLeche)*100);
         }
         return porcentajeVariacionLeche;
     }
 
-    public Double porcentajeVariacionGrasa(PagoEntity pagoAnterior, Integer resultadoGrasa){
-        Double porcentajeVariacionGrasa = 0.0;
+    public double porcentajeVariacionGrasa(PagoEntity pagoAnterior, Integer resultadoGrasa){
+        double porcentajeVariacionGrasa = 0.0;
         if(pagoAnterior.getId_pago() != 0){
             if(pagoAnterior.getPorcentajeGrasa() != 0){
-                Double grasaAnterior = pagoAnterior.getPorcentajeGrasa();
+                double grasaAnterior = pagoAnterior.getPorcentajeGrasa();
                 porcentajeVariacionGrasa = ((grasaAnterior-resultadoGrasa)/resultadoGrasa);
             }
         }
         return porcentajeVariacionGrasa;
     }
 
-    public Double porcentajeVariacionSolidos(PagoEntity pagoAnterior, Integer resultadoSolidos){
-        Double porcentajeVariacionSolidos = 0.0;
+    public double porcentajeVariacionSolidos(PagoEntity pagoAnterior, Integer resultadoSolidos){
+        double porcentajeVariacionSolidos = 0.0;
         if(pagoAnterior.getId_pago() != 0){
             if(pagoAnterior.getPorcentajeSolidosTotales() != 0){
-                Double solidosAnterior = pagoAnterior.getPorcentajeSolidosTotales();
+                double solidosAnterior = pagoAnterior.getPorcentajeSolidosTotales();
                 porcentajeVariacionSolidos = ((solidosAnterior-resultadoSolidos)/resultadoSolidos);
             }
         }
         return porcentajeVariacionSolidos;
     }
 
-    public Double descuentoVariacionLeche(Double porcentajeVariacionLeche, Double pagoAcopio) {
-        Double descuentoVariacionLeche;
+    public double descuentoVariacionLeche(double porcentajeVariacionLeche, double pagoAcopio) {
+        double descuentoVariacionLeche;
         if(porcentajeVariacionLeche <= 8) {
             descuentoVariacionLeche = pagoAcopio * 0;
         }else if(porcentajeVariacionLeche <= 25) {
@@ -327,8 +315,8 @@ public class PagoService {
         return descuentoVariacionLeche;
     }
 
-    public Double descuentoVariacionGrasa(Double porcentajeVariacionGrasa, Double pagoAcopio) {
-        Double descuentoVariacionGrasa;
+    public double descuentoVariacionGrasa(double porcentajeVariacionGrasa, double pagoAcopio) {
+        double descuentoVariacionGrasa;
         if(porcentajeVariacionGrasa <= 15) {
             descuentoVariacionGrasa = pagoAcopio * 0;
         }else if(porcentajeVariacionGrasa <= 25) {
@@ -341,8 +329,8 @@ public class PagoService {
         return descuentoVariacionGrasa;
     }
 
-    public Double descuentoVariacionSolidos(Double porcentajeVariacionSolidos, Double pagoAcopio) {
-        Double descuentoVariacionSolidos;
+    public double descuentoVariacionSolidos(double porcentajeVariacionSolidos, double pagoAcopio) {
+        double descuentoVariacionSolidos;
         if(porcentajeVariacionSolidos <= 6) {
             descuentoVariacionSolidos = pagoAcopio * 0;
         }else if(porcentajeVariacionSolidos <= 12) {
