@@ -14,18 +14,16 @@ public class ProveedorController {
     @Autowired
     ProveedorService proveedorService;
 
-    @GetMapping("/nuevo") public String nuevo(){return "vista";}
-
-    @PostMapping()
-    public String createProveedor(@RequestParam("nombre") String nombre,
-                                  @RequestParam("codigo") String codigo,
-                                  @RequestParam("categoria") String categoria,
-                                  @RequestParam("retencion") String retencion){
+    @PostMapping
+    public ResponseEntity<?> createProveedor(@RequestParam("nombre") String nombre,
+                                                  @RequestParam("codigo") String codigo,
+                                                  @RequestParam("categoria") String categoria,
+                                                  @RequestParam("retencion") String retencion){
         proveedorService.createProveedor(nombre, codigo, categoria, retencion);
-        return "redirect:/post-createxd";
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ProveedorEntity>> getProveedores(){
         List<ProveedorEntity> proveedores = proveedorService.getAllProveedor();
         return  ResponseEntity.ok(proveedores);

@@ -3,6 +3,7 @@ package milkstgo.pagoservice.controllers;
 import milkstgo.pagoservice.entities.PagoEntity;
 import milkstgo.pagoservice.services.PagoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,14 +13,14 @@ import java.util.List;
 public class PagoController {
     @Autowired
     PagoService pagoService;
-    @PostMapping()
-    public String upload(){
+    @PostMapping
+    public ResponseEntity<?> upload(){
         pagoService.iniciar();
-        return "redirect:/opcionesGestion";
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping()
-    public List<PagoEntity> getall(){
-        return pagoService.getAll();
+    @GetMapping
+    public ResponseEntity<List<PagoEntity>> getall(){
+        return ResponseEntity.ok(pagoService.getAll());
     }
 }

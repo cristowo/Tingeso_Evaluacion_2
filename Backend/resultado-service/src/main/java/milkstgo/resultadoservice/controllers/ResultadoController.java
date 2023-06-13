@@ -23,17 +23,13 @@ public class ResultadoController {
     }
 
     @PostMapping("/file")
-    public String upload(@RequestParam("file") MultipartFile archivo, RedirectAttributes redirectAttributes){
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile archivo){
         resultadoService.guardarResultado(archivo);
-        redirectAttributes.addFlashAttribute("mensajeResultado", resultadoService.leerCsv("Resultados.csv"));
-        return "redirect:/subirArchivo";
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/info")
-    public ArrayList<ResultadoEntity> listar(Model model){
-        ArrayList<ResultadoEntity> datos = resultadoService.obtenerDatosResultado();
-        //model.addAttribute("datos", datos);
-        //return "informacionArchivoResultado";
-        return datos;
+    public ResponseEntity<ArrayList<ResultadoEntity>> listar(){
+        return ResponseEntity.ok(resultadoService.obtenerDatosResultado());
     }
 }

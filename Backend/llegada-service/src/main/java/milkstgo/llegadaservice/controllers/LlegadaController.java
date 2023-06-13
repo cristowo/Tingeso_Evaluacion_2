@@ -29,14 +29,11 @@ public class LlegadaController {
         return ResponseEntity.ok(llegadaService.countTurnosById(codigo, turno));
     }
     @PostMapping("/file")
-    public void upload(@RequestParam("file") MultipartFile archivo, RedirectAttributes redirectAttributes){
-        llegadaService.guardar(archivo);
-        redirectAttributes.addFlashAttribute("mensaje", llegadaService.leerCsv("Acopio.csv"));
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile archivo){
+        return ResponseEntity.ok(llegadaService.guardar(archivo));
     }
     @GetMapping("/info")
-    public ArrayList<LlegadaEntity> listar(){
-        ArrayList<LlegadaEntity> datos = llegadaService.obtenerDatos();
-        return datos;
+    public ResponseEntity<ArrayList<LlegadaEntity>> listar(){
+        return ResponseEntity.ok(llegadaService.obtenerDatos());
     }
-
 }
