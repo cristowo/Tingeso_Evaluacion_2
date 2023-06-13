@@ -34,16 +34,16 @@ spring:
         - id: pago-service
           uri: lb://pago-service
           predicates:
-            - Path=/**
+            - Path=/pago/**
         - id: proveedor-service
           uri: lb://proveedor-service
           predicates:
-            - Path=/**
+            - Path=/proveedor/**
         - id: llegada-service
           uri: lb://llegada-service
           predicates:
-            - Path=/**
+            - Path=/llegada/**
         - id: resultado-service
           uri: lb://resultado-service
           predicates:
-            - Path=/**
+            - Path=/resultado/**
