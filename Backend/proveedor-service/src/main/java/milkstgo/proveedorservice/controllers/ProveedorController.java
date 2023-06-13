@@ -4,7 +4,6 @@ import milkstgo.proveedorservice.entities.ProveedorEntity;
 import milkstgo.proveedorservice.services.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
