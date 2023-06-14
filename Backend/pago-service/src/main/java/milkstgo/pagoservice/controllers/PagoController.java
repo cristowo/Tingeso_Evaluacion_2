@@ -1,7 +1,6 @@
 package milkstgo.pagoservice.controllers;
 
 import milkstgo.pagoservice.entities.PagoEntity;
-import milkstgo.pagoservice.models.ProveedorModel;
 import milkstgo.pagoservice.services.PagoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
