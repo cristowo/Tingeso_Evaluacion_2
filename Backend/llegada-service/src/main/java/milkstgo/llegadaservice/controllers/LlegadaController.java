@@ -30,7 +30,8 @@ public class LlegadaController {
     }
     @PostMapping("/file")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile archivo){
-        return ResponseEntity.ok(llegadaService.guardar(archivo));
+        llegadaService.guardar(archivo);
+        return ResponseEntity.ok(llegadaService.leerCsv("Acopio.csv"));
     }
     @GetMapping("/info")
     public ResponseEntity<ArrayList<LlegadaEntity>> listar(){

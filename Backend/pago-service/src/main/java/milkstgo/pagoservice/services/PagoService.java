@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class PagoService {
@@ -26,14 +28,14 @@ public class PagoService {
     }
     public List<ProveedorModel> findAllProveedores() {
         ProveedorModel[] proveedores = restTemplate.getForObject("http://proveedor-service/proveedores", ProveedorModel[].class);
-        return Arrays.asList(proveedores);
+        return Arrays.stream(proveedores).toList();
     }
     public ProveedorModel findProveedorByCodigoProveedor(String codigo){
         return restTemplate.getForObject("http://proveedor-service/proveedores/"+ codigo, ProveedorModel.class);
     }
     public ArrayList<LlegadaModel> findAllLlegadasByCodigoProveedor(String codigo){
-        LlegadaModel[] llegadas = restTemplate.getForObject("http://llegada-service/llegadas/"+ codigo, LlegadaModel[].class);
-        return new ArrayList<>(Arrays.asList(llegadas));
+        LlegadaModel[] llegada = restTemplate.getForObject("http://llegada-service/llegadas/"+ codigo, LlegadaModel[].class);
+        return new ArrayList<>(Arrays.stream(llegada).toList());
     }
     public Integer getTotalDays(String codigo){
         return restTemplate.getForObject("http://llegada-service/llegadas/totalDays/"+ codigo, Integer.class);
@@ -72,6 +74,7 @@ public class PagoService {
         pago.setNombreProveedor(proveedor.getNombre());
         //----------- Quincena ----------------
         ArrayList<LlegadaModel> llegadas = findAllLlegadasByCodigoProveedor(codigo);
+        if(llegadas.isEmpty()){return;}
         //Revisamos en que quincena nos encontramos
         String quincena = obtenerFechaQuincena(llegadas);
         pago.setQuincena(quincena);
@@ -140,7 +143,7 @@ public class PagoService {
         //------------ Monto Final --------------------
         double montoFinal = pagoTotal - montoRetencion;
         pago.setMontoFinal(montoFinal);
-
+        System.out.println("pago se pago lol "+codigo);
         pagoRepository.save(pago);
     }
 

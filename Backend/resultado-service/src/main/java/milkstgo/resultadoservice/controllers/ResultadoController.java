@@ -25,7 +25,7 @@ public class ResultadoController {
     @PostMapping("/file")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile archivo){
         resultadoService.guardarResultado(archivo);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(resultadoService.leerCsv("Resultados.csv"));
     }
 
     @GetMapping("/info")

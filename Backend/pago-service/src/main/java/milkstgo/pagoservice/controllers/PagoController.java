@@ -1,6 +1,7 @@
 package milkstgo.pagoservice.controllers;
 
 import milkstgo.pagoservice.entities.PagoEntity;
+import milkstgo.pagoservice.models.ProveedorModel;
 import milkstgo.pagoservice.services.PagoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class PagoController {
     @Autowired
     PagoService pagoService;
     @PostMapping
-    public ResponseEntity<?> upload(){
+    public ResponseEntity<?> iniciar(){
         pagoService.iniciar();
         return ResponseEntity.ok().build();
     }
