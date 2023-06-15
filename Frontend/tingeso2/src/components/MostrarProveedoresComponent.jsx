@@ -9,6 +9,10 @@ class MostrarProveedoresComponent extends Component {
     };
   }
 
+  viewPago(codigo){
+    window.location.href = '/pagos/' + codigo;
+  }
+
   componentDidMount() {
     ProveedorService.mostrarProveedores()
       .then((response) => {
@@ -32,7 +36,8 @@ class MostrarProveedoresComponent extends Component {
                         <th>Nombre</th>
                         <th>Codigo</th>
                         <th>Categoria</th>
-                        <th>Retencion?</th>
+                        <th>Retencion</th>
+                        <th>Pagos</th>
                     </tr>
                 </thead>
                 <tbody>{
@@ -44,6 +49,7 @@ class MostrarProveedoresComponent extends Component {
                                 <td>{proveedor.codigo}</td>
                                 <td>{proveedor.categoria}</td>
                                 <td>{proveedor.retencion}</td>
+                                <td><button onClick={ () => this.viewPago(proveedor.codigo)}>ver</button> </td>
                             </tr>
                         )
                     }
