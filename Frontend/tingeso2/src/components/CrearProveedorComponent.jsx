@@ -31,6 +31,7 @@ class CrearProveedorComponent extends Component {
     saveProveedor = (e) => {
         e.preventDefault();
         ProveedorService.crearProveedor(this.state.nombre, this.state.codigo, this.state.categoria, this.state.retencion).then(res => {
+            window.alert("Se creo el proveedor correctamente");
             window.location.href = "/proveedores";
         });
     }

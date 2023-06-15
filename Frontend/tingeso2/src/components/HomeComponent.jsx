@@ -19,7 +19,7 @@ export default class HomeComponent extends Component {
             </div>
             <div style={{ marginRight: '15px' }}>
                 <h1>Subir Acopio</h1>
-                <button onClick={ () => this.redireccionar('/acopio')}>Subir Acopio</button>
+                <button onClick={ () => this.redireccionar('/llegadas')}>Subir Acopio</button>
             </div>
             <div style={{ marginRight: '15px' }}>
                 <h1>Subir Resultados</h1>
@@ -27,7 +27,7 @@ export default class HomeComponent extends Component {
             </div>
             <div style={{ marginRight: '15px' }}> 
                 <h1>Generar Pagos</h1>
-                <button onClick={ () => this.redireccionar('/pagos')}>Generar Pagos</button>
+                <button onClick={ () => this.redireccionar('/pagos/generar')}>Generar Pagos</button>
             </div>
             </div>
         );
