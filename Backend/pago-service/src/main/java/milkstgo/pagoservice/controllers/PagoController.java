@@ -23,4 +23,8 @@ public class PagoController {
     public ResponseEntity<List<PagoEntity>> getall(){
         return ResponseEntity.ok(pagoService.getAll());
     }
+    @GetMapping("/{codigo}")
+    public ResponseEntity<List<PagoEntity>> getone(@PathVariable("codigo") String codigo){
+        return ResponseEntity.ok(pagoService.buscarPagos(codigo));
+    }
 }

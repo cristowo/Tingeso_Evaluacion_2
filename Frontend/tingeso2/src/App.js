@@ -1,15 +1,17 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route} from 'react-router-dom';
 import MostrarProveedoresComponent from './components/MostrarProveedoresComponent';
+import CrearProveedorComponent from './components/CrearProveedorComponent';
+import MostrarPagosComponent from './components/MostrarPagosComponent';
 
 function App() {
   
   return (
     <div>
       <BrowserRouter>
-        <Routes>
-          <Route path="/proveedores" element={<MostrarProveedoresComponent />} />
-        </Routes>
+          <Route path="/proveedores" component={MostrarProveedoresComponent} />
+          <Route path="/proveedores/register" component={CrearProveedorComponent} />
+          <Route path="/pagos/:codigo" component={MostrarPagosComponent} />
       </BrowserRouter>
     </div>
   );
