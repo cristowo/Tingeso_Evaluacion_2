@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ProveedorService from '../services/ProveedorService';
+import Table from 'rsuite/Table';
+import { Column, HeaderCell, Cell } from 'rsuite-table';
 
 class MostrarProveedoresComponent extends Component {
   constructor() {
@@ -26,37 +28,36 @@ class MostrarProveedoresComponent extends Component {
   render() {
     return (
     <div> 
-        <h2 className="text-center">Proveedores List</h2> 
-        
-        <div className="row">
-            <table className="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Proveedor ID</th>
-                        <th>Nombre</th>
-                        <th>Codigo</th>
-                        <th>Categoria</th>
-                        <th>Retencion</th>
-                        <th>Pagos</th>
-                    </tr>
-                </thead>
-                <tbody>{
-                    this.state.proveedores.map(
-                        proveedor =>
-                            <tr key={proveedor.id}>
-                                <td>{proveedor.id}</td>
-                                <td>{proveedor.nombre}</td>
-                                <td>{proveedor.codigo}</td>
-                                <td>{proveedor.categoria}</td>
-                                <td>{proveedor.retencion}</td>
-                                <td><button onClick={ () => this.viewPago(proveedor.codigo)}>ver</button> </td>
-                            </tr>
-                        )
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+      <h1 align="center">Proveedores List</h1>
+      <Table data={this.state.proveedores} autoHeight={true} align="center">
+        <Column width={60} >
+          <HeaderCell>Codigo</HeaderCell>
+          <Cell dataKey="codigo" />
+        </Column>
+        <Column width={100}>
+          <HeaderCell>Nombre</HeaderCell>
+          <Cell dataKey="nombre" />
+        </Column>
+        <Column width={100}>
+          <HeaderCell>Categoria</HeaderCell>
+          <Cell dataKey="categoria" />
+        </Column>
+        <Column width={100}>
+          <HeaderCell>Retencion</HeaderCell>
+          <Cell dataKey="retencion" />
+        </Column>
+        <Column width={100}>
+          <HeaderCell>Pagos</HeaderCell>
+            <Cell dataKey="codigo">
+              {(proveedor) => {
+                return (
+                  <button onClick={() => this.viewPago(proveedor.codigo)}>Ver</button>
+                );
+              }}
+            </Cell>
+        </Column>
+      </Table>
+      </div>
     );
   }
 }
