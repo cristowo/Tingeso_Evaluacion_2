@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: optional:configserver:http://localhost:8081
   application:
     name: llegada-service
   cloud:
@@ -14,3 +12,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
