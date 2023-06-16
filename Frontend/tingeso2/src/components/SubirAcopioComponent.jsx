@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LlegadaService from '../services/LlegadaService';
+import { Grid, Row } from 'rsuite';
 
 class SubirAcopioComponent extends Component {
     constructor() {
@@ -28,10 +29,16 @@ class SubirAcopioComponent extends Component {
 
     render() {
         return (
-            <div>
-                <h1>Subir Acopio</h1>
-                <input type="file" onChange={this.onChangeHandler} />
-                <button type="button" onClick={this.onClickHandler}>Upload</button>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+            <h1>Subir Acopio</h1>
+                <Grid fluid align="center">
+                    <Row style={{ marginBottom: '20px', marginTop: '20px'}}>
+                        <input type="file" onChange={this.onChangeHandler} />
+                    </Row>
+                    <Row>
+                        <button type="button" onClick={this.onClickHandler}>Upload</button>
+                    </Row>
+                </Grid>
             </div>
         );
     }

@@ -27,26 +27,27 @@ class MostrarProveedoresComponent extends Component {
 
   render() {
     return (
-    <div> 
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{width: '1000px'}}>
       <h1 align="center">Proveedores List</h1>
       <Table data={this.state.proveedores} autoHeight={true} align="center">
-        <Column width={60} >
+        <Column width={200} >
           <HeaderCell>Codigo</HeaderCell>
           <Cell dataKey="codigo" />
         </Column>
-        <Column width={100}>
+        <Column width={200}>
           <HeaderCell>Nombre</HeaderCell>
           <Cell dataKey="nombre" />
         </Column>
-        <Column width={100}>
+        <Column width={200}>
           <HeaderCell>Categoria</HeaderCell>
           <Cell dataKey="categoria" />
         </Column>
-        <Column width={100}>
+        <Column width={200}>
           <HeaderCell>Retencion</HeaderCell>
           <Cell dataKey="retencion" />
         </Column>
-        <Column width={100}>
+        <Column width={200}>
           <HeaderCell>Pagos</HeaderCell>
             <Cell dataKey="codigo">
               {(proveedor) => {
@@ -57,6 +58,7 @@ class MostrarProveedoresComponent extends Component {
             </Cell>
         </Column>
       </Table>
+      </div>
       </div>
     );
   }

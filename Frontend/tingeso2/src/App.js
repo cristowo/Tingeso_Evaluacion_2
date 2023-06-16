@@ -16,7 +16,7 @@ function App() {
       <Navbar />
       <BrowserRouter>
           <Switch>
-          <Route path="/proveedores/register" component={CrearProveedorComponent} />
+            <Route path="/proveedores/register" component={CrearProveedorComponent} />
             <Route path="/proveedores" component={MostrarProveedoresComponent} />
             <Route path="/pagos/generar" component={GenerarPagoComponent} />
             <Route path="/pagos/:codigo" component={MostrarPagosComponent} />

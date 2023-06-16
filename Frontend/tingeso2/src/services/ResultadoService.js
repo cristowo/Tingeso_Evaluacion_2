@@ -3,7 +3,7 @@ import axios from 'axios';
 const url = 'http://localhost:8080/resultados';
 
 class ResultadoService{
-    subirAcopio(resultados){
+    subirResultado(resultados){
         return axios.post(url+'/file', resultados);
     }
 
