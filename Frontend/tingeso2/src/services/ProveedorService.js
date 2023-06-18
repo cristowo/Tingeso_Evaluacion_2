@@ -9,9 +9,8 @@ class ProveedoresService {
 
   crearProveedor(nombre, codigo, categoria, retencion){
     return axios.post(`${url}?nombre=${nombre}&codigo=${codigo}&categoria=${categoria}&retencion=${retencion}`);
+  }
 }
-}
-
 
 const instance = new ProveedoresService();
 export default instance;

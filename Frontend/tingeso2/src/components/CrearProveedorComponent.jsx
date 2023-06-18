@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ProveedorService from '../services/ProveedorService';
-import { Form, ButtonToolbar, Button, Input } from 'rsuite';
+import { Form, ButtonToolbar, Button, SelectPicker } from 'rsuite';
 
 class CrearProveedorComponent extends Component {
     constructor() {
@@ -21,12 +21,12 @@ class CrearProveedorComponent extends Component {
         this.setState({ codigo: event.target.value });
     }
 
-    changeCategoriaHandler = (event) => {
-        this.setState({ categoria: event.target.value });
-    }
+    changeCategoriaHandler = (value) => {
+      this.setState({ categoria: value });
+    }    
 
-    changeRetencionHandler = (event) => {
-        this.setState({ retencion: event.target.value });
+    changeRetencionHandler = (value) => {
+        this.setState({ retencion: value });
     }
 
     saveProveedor = (e) => {
@@ -36,8 +36,16 @@ class CrearProveedorComponent extends Component {
             window.location.href = "/proveedores";
         });
     }
-
+    
+    
     render() {
+        const dataRetencion = ['Si', 'No'].map(
+          retencion => ({ label: retencion, value: retencion })
+        );
+        
+        const dataCategoria = ['A', 'B', 'C', 'D'].map(
+          categoria => ({ label: categoria, value: categoria })
+        );
         return(
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
             <h1 align="center">Crear Proveedor</h1>
@@ -47,21 +55,25 @@ class CrearProveedorComponent extends Component {
               <Form.ControlLabel>Nombre</Form.ControlLabel>
               <Form.Control name="nombre" />
             </Form.Group>
+
             <Form.Group onChange={this.changeCodigoHandler}>
               <Form.ControlLabel>Codigo</Form.ControlLabel>
               <Form.Control name="codigo" minLength={5} maxLength={5} />
             </Form.Group>
-            <Form.Group onChange={this.changeCategoriaHandler}>
-              <Form.ControlLabel>Categoria</Form.ControlLabel>
-              <Form.Control name="categoria" />
+
+            <Form.Group>
+              <p>Categoria</p>
+              <SelectPicker data={dataCategoria} searchable={false} style={{ width: 300 }} onChange={this.changeCategoriaHandler}/>
             </Form.Group>
-            <Form.Group onChange={this.changeRetencionHandler}>
-              <Form.ControlLabel>Retencion</Form.ControlLabel>
-              <Form.Control name="retencion" />
+
+            <Form.Group>
+              <p>Retencion</p>
+              <SelectPicker data={dataRetencion} searchable={false} style={{ width: 300 }} onChange={this.changeRetencionHandler}/>
             </Form.Group>
+
             <Form.Group>
               <ButtonToolbar>
-                <Button appearance="primary" onClick={this.saveProveedor}>Enviar</Button>
+                <Button appearance="primary" style={{ width: 300 }} onClick={this.saveProveedor}>Crear Proveedor</Button>
               </ButtonToolbar>
             </Form.Group>
           </Form>
