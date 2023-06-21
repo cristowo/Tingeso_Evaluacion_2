@@ -1,4 +1,4 @@
 FROM openjdk:17
 ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} llegada-service.jar
-ENTRYPOINT ["java","-jar","/llegada-service.jar"]
+COPY ${JAR_FILE} llegada-service-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java","-jar","/llegada-service-0.0.1-SNAPSHOT.jar"]

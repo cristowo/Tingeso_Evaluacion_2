@@ -6,27 +6,27 @@ pipeline{
     stages{
         stage("Build JAR File"){
             steps{
-                checkout scmGit(branches: [[name: '/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/cristowo/Tingeso_Evaluacion_2']])
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/cristowo/Tingeso_Evaluacion_2']])
                 dir("Backend/config-service"){
-                        bat "mvn clean package -DskipTests=true"
+                        bat "mvn clean install -DskipTests=true"
                 }
                 dir("Backend/eureka-service"){
-                        bat "mvn clean package -DskipTests=true"
+                        bat "mvn clean install -DskipTests=true"
                 }
                 dir("Backend/proveedor-service"){
-                        bat "mvn clean package -DskipTests=true"
+                        bat "mvn clean install -DskipTests=true"
                 }
                 dir("Backend/llegada-service"){
-                        bat "mvn clean package -DskipTests=true"
+                        bat "mvn clean install -DskipTests=true"
                 }
                 dir("Backend/resultado-service"){
-                        bat "mvn clean package -DskipTests=true"
+                        bat "mvn clean install -DskipTests=true"
                 }
                 dir("Backend/pago-service"){
-                        bat "mvn clean package -DskipTests=true"
+                        bat "mvn clean install -DskipTests=true"
                 }
                 dir("Backend/gateway-service"){
-                        bat "mvn clean package -DskipTests=true"
+                        bat "mvn clean install -DskipTests=true"
                 }                
             }
         }
@@ -60,7 +60,7 @@ pipeline{
         }
         stage("Push Docker Image"){
             steps{
-                withCredentials([string(credentialsId: 'dckrhubpassword', variable: 'dckpass')]){
+                withCredentials([string(credentialsId: 'dockerpass', variable: 'dckpass')]) {
                         bat "docker login -u cristowo -p ${dckpass}"
                         }
                 dir("Backend/config-service"){
