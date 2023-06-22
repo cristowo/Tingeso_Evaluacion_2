@@ -53,7 +53,7 @@ pipeline{
                 dir("Backend/gateway-service"){
                         bat "docker build -t cristowo/tingeso2gateway:latest ."
                 }
-                dir("Frontend"){
+                dir("Frontend/tingeso2"){
                         bat "docker build -t cristowo/tingeso2frontend:latest ."
                 }
             }
