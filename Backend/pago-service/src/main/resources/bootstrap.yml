@@ -1,12 +1,12 @@
 spring:
   config:
-    import: optional:configserver:http://localhost:8081
+    import: optional:configserver:http://config-service:8081
   application:
     name: pago-service
   cloud:
     config:
       enabled: true
-      uri: http://localhost:8081
+      uri: http://config-service:8081
   datasource:
     url: jdbc:postgresql://localhost:5432/tingeso2pago
     username: postgres
