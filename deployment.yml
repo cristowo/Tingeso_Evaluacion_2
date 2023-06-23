@@ -100,26 +100,96 @@ spec:
         image: cristowo/tingeso2gateway:latest
         ports:
         - containerPort: 8080
+        env:
+        - name: PROVEEDOR_HOST
+          value: http://proveedor-service:8082
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontened-service
+  name: llegada-service
   labels:
-    app: frontened-service
+    app: llegada-service
 spec:
   selector:
     matchLabels:
-      app: frontened-service
+      app: llegada-service
   replicas: 1
   template:
     metadata:
       labels:
-        app: frontened-service
+        app: llegada-service
     spec:
       containers:
-      - name: frontened-service
-        image: cristowo/tingeso2frontend:latest
+      - name: llegada-service
+        image: cristowo/tingeso2llegada:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 8083
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2llegada:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resultado-service
+  labels:
+    app: resultado-service
+spec:
+  selector:
+    matchLabels:
+      app: resultado-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: resultado-service
+    spec:
+      containers:
+      - name: resultado-service
+        image: cristowo/tingeso2resultado:latest
+        ports:
+        - containerPort: 8084
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2resultado:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pago-service
+  labels:
+    app: pago-service
+spec:
+  selector:
+    matchLabels:
+      app: pago-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pago-service
+    spec:
+      containers:
+      - name: pago-service
+        image: cristowo/tingeso2pago:latest
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2pago:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
