@@ -43,48 +43,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: llegada-service
-spec:
-  selector:
-    app: llegada-service
-  ports:
-    - protocol: TCP
-      port: 8083
-      targetPort: 8083
-  type: LoadBalancer
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: resultado-service
-spec:
-  selector:
-    app: resultado-service
-  ports:
-    - protocol: TCP
-      port: 8084
-      targetPort: 8084
-  type: LoadBalancer
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: pago-service
-spec:
-  selector:
-    app: pago-service
-  ports:
-    - protocol: TCP
-      port: 8085
-      targetPort: 8085
-  type: LoadBalancer
-
----
-apiVersion: v1
-kind: Service
-metadata:
   name: gateway-service
 spec:
   selector:
