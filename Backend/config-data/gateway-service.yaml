@@ -31,7 +31,7 @@ spring:
           predicates:
             - Path=/llegadas/**
         - id: proveedor-service
-          uri: lb://proveedor-service
+          uri: lb://proveedor-service-54f4b95d88-p5bjq
           predicates:
             - Path=/proveedores/**
         - id: resultado-service
