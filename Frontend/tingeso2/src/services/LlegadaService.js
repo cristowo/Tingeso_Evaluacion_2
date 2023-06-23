@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:8080/llegadas';
+const url = 'http://gateway-service:8080/llegadas';
 
 class LlegadaService{
     subirAcopio(acopio){

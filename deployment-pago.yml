@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tingeso2pago
+  labels:
+    app: tingeso2pago
+spec:
+  selector:
+    matchLabels:
+      app: tingeso2pago
+  template:
+    metadata:
+      labels:
+        app: tingeso2pago
+    spec:
+      containers:
+      - name: tingeso2pago
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: "1234"
+        - name: POSTGRES_DB
+          value: "pago"
+        volumeMounts:
+        - name: tingeso2pago-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: tingeso2pago-persistent-storage
+        persistentVolumeClaim:
+          claimName: tingeso2pago-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tingeso2pago-pv-claim
+  labels:
+    app: tingeso2pago
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.5Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tingeso2pago
+  labels:
+    app: tingeso2pago
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: tingeso2pago
+  clusterIP: None
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pago-db
+data:
+  name: "pago"
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pago-service
+  labels:
+    app: pago-service
+spec:
+  selector:
+    matchLabels:
+      app: pago-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pago-service
+    spec:
+      containers:
+      - name: pago-service
+        image: cristowo/tingeso2pago:latest
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2pago:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pago-service
+spec:
+  selector:
+    app: pago-service
+  ports:
+    - nodePort: 30505
+      protocol: TCP
+      port: 8085
+      targetPort: 8085
+  type: NodePort

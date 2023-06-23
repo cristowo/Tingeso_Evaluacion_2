@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:8080/resultados';
+const url = 'http://gateway-service:8080/resultados';
 
 class ResultadoService{
     subirResultado(resultados){

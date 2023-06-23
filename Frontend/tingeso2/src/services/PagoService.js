@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:8080/pagos';
+const url = 'http://gateway-service:8080/pagos';
 
 class PagoService{
     mostrarPagos(codigo){

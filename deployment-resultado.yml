@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tingeso2resultado
+  labels:
+    app: tingeso2resultado
+spec:
+  selector:
+    matchLabels:
+      app: tingeso2resultado
+  template:
+    metadata:
+      labels:
+        app: tingeso2resultado
+    spec:
+      containers:
+      - name: tingeso2resultado
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: "1234"
+        - name: POSTGRES_DB
+          value: "resultado"
+        volumeMounts:
+        - name: tingeso2resultado-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: tingeso2resultado-persistent-storage
+        persistentVolumeClaim:
+          claimName: tingeso2resultado-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tingeso2resultado-pv-claim
+  labels:
+    app: tingeso2resultado
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.5Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tingeso2resultado
+  labels:
+    app: tingeso2resultado
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: tingeso2resultado
+  clusterIP: None
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: resultado-db
+data:
+  name: "resultado"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resultado-service
+  labels:
+    app: resultado-service
+spec:
+  selector:
+    matchLabels:
+      app: resultado-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: resultado-service
+    spec:
+      containers:
+      - name: resultado-service
+        image: cristowo/tingeso2resultado:latest
+        ports:
+        - containerPort: 8084
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2resultado:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: resultado-service
+spec:
+  selector:
+    app: resultado-service
+  ports:
+    - nodePort: 30504
+      protocol: TCP
+      port: 8084
+      targetPort: 8084
+  type: NodePort

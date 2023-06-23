@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tingeso2llegada
+  labels:
+    app: tingeso2llegada
+spec:
+  selector:
+    matchLabels:
+      app: tingeso2llegada
+  template:
+    metadata:
+      labels:
+        app: tingeso2llegada
+    spec:
+      containers:
+      - name: tingeso2llegada
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: "1234"
+        - name: POSTGRES_DB
+          value: "llegada"
+        volumeMounts:
+        - name: tingeso2llegada-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: tingeso2llegada-persistent-storage
+        persistentVolumeClaim:
+          claimName: tingeso2llegada-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tingeso2llegada-pv-claim
+  labels:
+    app: tingeso2llegada
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.5Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tingeso2llegada
+  labels:
+    app: tingeso2llegada
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: tingeso2llegada
+  clusterIP: None
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llegada-db
+data:
+  name: "llegada"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llegada-service
+  labels:
+    app: llegada-service
+spec:
+  selector:
+    matchLabels:
+      app: llegada-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: llegada-service
+    spec:
+      containers:
+      - name: llegada-service
+        image: cristowo/tingeso2llegada:latest
+        ports:
+        - containerPort: 8083
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2llegada:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+          
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llegada-service
+  labels:
+    app: llegada-service
+spec:
+  selector:
+    matchLabels:
+      app: llegada-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: llegada-service
+    spec:
+      containers:
+      - name: llegada-service
+        image: cristowo/tingeso2llegada:latest
+        ports:
+        - containerPort: 8083
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2llegada:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llegada-service
+spec:
+  selector:
+    app: llegada-service
+  ports:
+    - nodePort: 30503
+      protocol: TCP
+      port: 8083
+      targetPort: 8083
+  type: NodePort

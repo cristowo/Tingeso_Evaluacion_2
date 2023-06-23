@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tingeso2proveedor
+  labels:
+    app: tingeso2proveedor
+spec:
+  selector:
+    matchLabels:
+      app: tingeso2proveedor
+  template:
+    metadata:
+      labels:
+        app: tingeso2proveedor
+    spec:
+      containers:
+      - name: tingeso2proveedor
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: "1234"
+        - name: POSTGRES_DB
+          value: "proveedor"
+        volumeMounts:
+        - name: tingeso2proveedor-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: tingeso2proveedor-persistent-storage
+        persistentVolumeClaim:
+          claimName: tingeso2proveedor-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tingeso2proveedor-pv-claim
+  labels:
+    app: tingeso2proveedor
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.5Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tingeso2proveedor
+  labels:
+    app: tingeso2proveedor
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: tingeso2proveedor
+  clusterIP: None
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proveedor-db
+data:
+  name: "proveedor"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proveedor-service
+  labels:
+    app: proveedor-service
+spec:
+  selector:
+    matchLabels:
+      app: proveedor-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: proveedor-service
+    spec:
+      containers:
+      - name: proveedor-service
+        image: cristowo/tingeso2proveedor:latest
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://tingeso2proveedor:5432/postgres
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "1234"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proveedor-service
+spec:
+  selector:
+    app: proveedor-service
+  ports:
+    - nodePort: 30502
+      protocol: TCP
+      port: 8082
+      targetPort: 8082
+  type: NodePort

@@ -7,4 +7,5 @@ eureka:
     serviceUrl:
       defaultZone: http://eureka-service.default.svc.cluster.local:8761/eureka/
   instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:8084}}
+    prefer-ip-address: true
+    instance-id: resultado-service:8084
