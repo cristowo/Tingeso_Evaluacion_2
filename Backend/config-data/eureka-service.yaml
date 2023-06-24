@@ -5,7 +5,6 @@ eureka:
     fetch-registry: false
     register-with-eureka: false
     serviceUrl:
-      defaultZone: http://eureka-service.default.svc.cluster.local:8761/eureka/
+      defaultZone: http://eureka-service:8761/eureka/
   instance:
     preferIpAddress: true
-    ipAddress: ${status.podIP}

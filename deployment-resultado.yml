@@ -107,8 +107,7 @@ spec:
   selector:
     app: resultado-service
   ports:
-    - nodePort: 30504
       protocol: TCP
       port: 8084
       targetPort: 8084
-  type: NodePort
+  type: LoadBalancer

@@ -45,7 +45,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 0.5Mi
+      storage: 0.4Mi
 ---
 apiVersion: v1
 kind: Service
@@ -99,36 +99,6 @@ spec:
           value: "1234"
           
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: llegada-service
-  labels:
-    app: llegada-service
-spec:
-  selector:
-    matchLabels:
-      app: llegada-service
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: llegada-service
-    spec:
-      containers:
-      - name: llegada-service
-        image: cristowo/tingeso2llegada:latest
-        ports:
-        - containerPort: 8083
-        env:
-        - name: SPRING_DATASOURCE_URL
-          value: jdbc:postgresql://tingeso2llegada:5432/postgres
-        - name: SPRING_DATASOURCE_USERNAME
-          value: postgres
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: "1234"
-
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -137,8 +107,7 @@ spec:
   selector:
     app: llegada-service
   ports:
-    - nodePort: 30503
       protocol: TCP
       port: 8083
       targetPort: 8083
-  type: NodePort
+  type: LoadBalancer

@@ -5,7 +5,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     serviceUrl:
-      defaultZone: http://eureka-service.default.svc.cluster.local:8761/eureka/
+      defaultZone: http://eureka-service:8761/eureka/
   instance:
     prefer-ip-address: true
     instance-id: proveedor-service:8082
