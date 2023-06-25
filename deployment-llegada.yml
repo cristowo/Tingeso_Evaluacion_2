@@ -45,7 +45,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 0.4Mi
+      storage: 0.5Mi
 ---
 apiVersion: v1
 kind: Service
@@ -107,7 +107,7 @@ spec:
   selector:
     app: llegada-service
   ports:
-      protocol: TCP
+    - protocol: TCP
       port: 8083
       targetPort: 8083
   type: LoadBalancer

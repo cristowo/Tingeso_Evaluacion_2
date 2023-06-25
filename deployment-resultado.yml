@@ -107,7 +107,7 @@ spec:
   selector:
     app: resultado-service
   ports:
-      protocol: TCP
+    - protocol: TCP
       port: 8084
       targetPort: 8084
   type: LoadBalancer
